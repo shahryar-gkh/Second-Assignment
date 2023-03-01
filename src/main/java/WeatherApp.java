@@ -6,19 +6,17 @@ import org.json.JSONObject;
 import java.util.Scanner;
 
 public class WeatherApp {
-    // Copy your API-KEY here
-    public final static String apiKey = "API-KEY";
-    // TODO: Write main function
+    public final static String apiKey = "999b105d955b48abb83173447232802";
+
     public static void main(String[] args) {
-
+        Scanner input = new Scanner(System.in);
+        String city = input.nextLine();
+        JSONObject weatherJson = new JSONObject(getWeatherData(city));
+        System.out.println("Temperature: " + getTemperature(weatherJson));
+        System.out.println("Humidity: " + getHumidity(weatherJson));
+        System.out.println("Wind Speed: " + getWindSpeed(weatherJson));
+        System.out.println("Wind Direction: " + getWindDirection(weatherJson));
     }
-
-    /**
-     * Retrieves weather data for the specified city.
-     *
-     * @param city the name of the city for which weather data should be retrieved
-     * @return a string representation of the weather data, or null if an error occurred
-     */
     public static String getWeatherData(String city) {
         try {
             URL url = new URL("http://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + city);
@@ -38,15 +36,27 @@ public class WeatherApp {
         }
     }
 
-    // TODO: Write getTemperature function returns celsius temperature of city by given json string
-    public static double getTemperature(String weatherJson){
-        double answer = 0.0;
+    public static double getTemperature(JSONObject weatherJson){
+        JSONObject current = weatherJson.getJSONObject("current");
+        double answer = current.getDouble("temp_c");
         return answer;
     }
 
-    // TODO: Write getHumidity function returns humidity percentage of city by given json string
-    public static int getHumidity(String weatherJson){
-        int answer = 0;
+    public static int getHumidity(JSONObject weatherJson){
+        JSONObject current = weatherJson.getJSONObject("current");
+        int answer = current.getInt("humidity");
+        return answer;
+    }
+
+    public static double getWindSpeed(JSONObject weatherJson){
+        JSONObject current = weatherJson.getJSONObject("current");
+        double answer = current.getDouble("wind_kph");
+        return answer;
+    }
+
+    public static String getWindDirection(JSONObject weatherJson){
+        JSONObject current = weatherJson.getJSONObject("current");
+        String answer = current.getString("wind_dir");
         return answer;
     }
 }
